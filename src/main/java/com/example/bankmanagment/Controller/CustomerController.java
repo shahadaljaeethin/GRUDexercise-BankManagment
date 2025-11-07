@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 
 @RestController
-@RequestMapping("/api/v1/Bank Managment")
+@RequestMapping("/api/v1/bank managment")
 public class CustomerController {
     private final PathMatcher pathMatcher;
     //create database
