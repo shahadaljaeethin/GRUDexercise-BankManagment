@@ -2,6 +2,7 @@ package com.example.bankmanagment.Controller;
 
 import com.example.bankmanagment.Api.ApiResponse;
 import com.example.bankmanagment.Model.Customer;
+import org.springframework.util.PathMatcher;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -9,9 +10,15 @@ import java.util.ArrayList;
 @RestController
 @RequestMapping("/api/v1/Bank Managment")
 public class CustomerController {
-//create database
+    private final PathMatcher pathMatcher;
+    //create database
 ArrayList<Customer> customers = new ArrayList<>();
-//--------------------------------------
+
+    public CustomerController(PathMatcher pathMatcher) {
+        this.pathMatcher = pathMatcher;
+    }
+
+    //--------------------------------------
 @GetMapping("/get")
 public ArrayList<Customer> getAllCustomers(){
 return customers;
@@ -32,11 +39,18 @@ public ApiResponse removeCustomer(@PathVariable int index)
 customers.remove(index);
 return new ApiResponse("deleted complete.");
 }
-@PutMapping("set/deposit/{index}")
-public ApiResponse deposit(@PathVariable int index, double amount){
+@PutMapping("set/deposit/{index}/{amount}")
+public ApiResponse deposit(@PathVariable int index, @PathVariable double amount){
 if(amount<=0) return new ApiResponse("Amount should be over zero");
 customers.get(index).setBalance(customers.get(index).getBalance()+amount);
 return new ApiResponse("deposit done completely, new balance:"+customers.get(index).getBalance());
 }
+@PutMapping("set/withdraw/{index}/{amount}")
+public ApiResponse withDraw(@PathVariable int index,@PathVariable double amount){
+if(amount>customers.get(index).getBalance()) return new ApiResponse("amount is less than current balance :(");
+else if(amount<=0) return new ApiResponse("Amount should be over zero");
+customers.get(index).setBalance(customers.get(index).getBalance()-amount);
+ return new ApiResponse("withdraw done completely, new balance:"+customers.get(index).getBalance());
 
+}
 }
